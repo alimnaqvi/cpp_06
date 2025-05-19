@@ -5,39 +5,6 @@ ScalarConverter::~ScalarConverter()
 {
 }
 
-// The main static method
-void ScalarConverter::convert( const std::string& str )
-{
-    LiteralType inputType{ inferType( str ) };
-
-    switch ( inputType )
-    {
-    case LiteralType::INVALID:
-        std::cout << USAGE_MSG;
-        break;
-    case LiteralType::CHAR:
-        handleChar( str );
-        break;
-    case LiteralType::INT:
-        handleInt( str );
-        break;
-    case LiteralType::FLOAT:
-        handleFloat( str );
-        break;
-    case LiteralType::DOUBLE:
-        handleDouble( str );
-        break;
-    // case LiteralType::PSEUDO:
-    //     handlePseudo( str );
-    //     break;
-    default: // This should never be reached but just to be safe
-        std::cout << USAGE_MSG;
-        break;
-    }
-}
-
-// Helper functions
-
 void trimWhitespace( std::string& str, const std::string& whitespace = " \t\n\r\f\v" )
 {
     const auto firstNonSpace = str.find_first_not_of( whitespace );
@@ -54,59 +21,66 @@ void trimWhitespace( std::string& str, const std::string& whitespace = " \t\n\r\
     str = str.substr( firstNonSpace, strLen );
 }
 
-LiteralType inferType( std::string str )
+// The main static method
+void ScalarConverter::convert( std::string str )
 {
     trimWhitespace( str );
 
     if ( str.empty() )
-        return LiteralType::INVALID;
+    {
+        std::cout << "Invalid input. " << USAGE_MSG << '\n';
+        return;
+    }
 
     const auto strLen{ str.length() };
 
     // It is char if length is 1 and it is not a digit
     if ( strLen == 1 && !std::isdigit( str[0] ) )
-        return LiteralType::CHAR;
+        return handleChar( str[0] );
 
     try
     {
         std::size_t unconvertedPos;
 
         double d{ std::stod( str, &unconvertedPos ) };
-        // It is double if '.' is present and stod succeeds without any leftover string
-        if ( str.find( '.' ) != std::string::npos && unconvertedPos == strLen )
-            return LiteralType::DOUBLE;
+        // It is double if '.'/nan/inf is present and stod succeeds without any leftover string
+        if ( ( str.find( '.' ) != std::string::npos || std::isnan( d ) || std::isinf( d ) ) &&
+             unconvertedPos == strLen )
+            return handleDouble( d );
 
         float f{ std::stof( str, &unconvertedPos ) };
-        // It is float if '.' is present and stof succeeds with only 'f' or 'F' as leftover
-        if ( str.find( '.' ) != std::string::npos && unconvertedPos == strLen + 1 &&
-             ( str[unconvertedPos] == 'f' || str[unconvertedPos] == 'F' ) )
-            return LiteralType::FLOAT;
+        // It is float if '.'/nan/inf is present and stof succeeds with only 'f' or 'F' as leftover
+        if ( ( str.find( '.' ) != std::string::npos || std::isnan( f ) || std::isinf( f ) ) &&
+             unconvertedPos + 1 == strLen && ( str[unconvertedPos] == 'f' || str[unconvertedPos] == 'F' ) )
+            return handleFloat( f );
 
         int i{ std::stoi( str, &unconvertedPos ) };
         // It is int if stoi succeeds without any leftover string
         if ( unconvertedPos == strLen )
-            return LiteralType::INT;
+            return handleInt( i );
     }
     catch ( const std::exception& e )
     {
+        // std::cout << "1 reached!" << '\n';
         std::cout << "Invalid input." << '\n';
     }
 
-    return LiteralType::INVALID;
+    std::cout << USAGE_MSG << '\n';
 }
+
+// Helper functions
 
 void printChar( char c )
 {
     if ( std::isprint( static_cast<unsigned char>( c ) ) )
-        std::cout << "char: " << c << '\n';
+        std::cout << "char: '" << c << "'\n";
     else
         std::cout << "char: " << "non-displayable" << '\n';
 }
 
-void handleChar( std::string str )
+void handleChar( char c )
 {
-    char c{ str[0] };
-    std::cout << "char: " << c << '\n';
+    printChar(c);
 
     int i{ static_cast<int>( c ) };
     std::cout << "int: " << i << '\n';
@@ -114,15 +88,14 @@ void handleChar( std::string str )
     std::cout << std::fixed << std::setprecision( 1 );
 
     float f{ static_cast<float>( c ) };
-    std::cout << "float: " << f << '\n';
+    std::cout << "float: " << f << 'f' << '\n';
 
     double d{ static_cast<double>( c ) };
     std::cout << "double: " << d << '\n';
 }
 
-void handleInt( std::string str )
+void handleInt( int i )
 {
-    int i{ std::stoi( str ) };
     std::cout << "int: " << i << '\n';
 
     if ( i > std::numeric_limits<char>::max() || i < std::numeric_limits<char>::min() )
@@ -136,17 +109,17 @@ void handleInt( std::string str )
     std::cout << std::fixed << std::setprecision( 1 );
 
     float f{ static_cast<float>( i ) };
-    std::cout << "float: " << f << '\n';
+    std::cout << "float: " << f << 'f' << '\n';
 
     double d{ static_cast<double>( i ) };
     std::cout << "double: " << d << '\n';
 }
 
-void handleFloat( std::string str )
+void handleFloat( float f )
 {
-    float f{ std::stof( str ) };
+    // std::cout << "2 reached!" << '\n';
     std::cout << std::fixed << std::setprecision( 1 );
-    std::cout << "float: " << f << '\n';
+    std::cout << "float: " << f << 'f' << '\n';
 
     double d{ static_cast<double>( f ) };
     std::cout << "double: " << d << '\n';
@@ -176,9 +149,8 @@ void handleFloat( std::string str )
     }
 }
 
-void handleDouble( std::string str )
+void handleDouble( double d )
 {
-    double d{ std::stod( str ) };
     std::cout << std::fixed << std::setprecision( 1 );
     std::cout << "double: " << d << '\n';
 
@@ -187,7 +159,7 @@ void handleDouble( std::string str )
     else
     {
         float f{ static_cast<float>( d ) };
-        std::cout << "float: " << f << '\n';
+        std::cout << "float: " << f << 'f' << '\n';
     }
 
     if ( std::isinf( d ) || std::isnan( d ) )

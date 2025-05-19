@@ -15,16 +15,7 @@
 - int (e.g., '42'): A signed integer that fits in the implementation-defined limits of largest and smallest integer.\n\
 - float (e.g., '42.0f'): A decimal number (must contain a '.' and must respect implementation-defined limits of float type) followed by 'f' or 'F'. In addition, '-inff', '+inff', and 'nanf' are also valid.\n\
 - double (e.g., '42.0'): A decimal number (must contain a '.' and must respect implementation-defined limits of double type). In addition, '-inf', '+inf', and 'nan' are also valid.\n\
-Note that any leading and trailing whitespaces will be stripped from inputted literal.\n"
-
-enum class LiteralType
-{
-    INVALID,
-    CHAR,
-    INT,
-    FLOAT,
-    DOUBLE,
-};
+Note that any leading and trailing whitespaces will be stripped from inputted literal."
 
 class ScalarConverter
 {
@@ -35,7 +26,7 @@ class ScalarConverter
     virtual ~ScalarConverter();
 
     // The main static method
-    static void convert( const std::string& str );
+    static void convert( std::string str );
 
   protected:
     // Make the constructor protected so the class cannot be instantiated
@@ -43,11 +34,10 @@ class ScalarConverter
 };
 
 // Helper functions
-LiteralType inferType( std::string str );
-void        handleChar( std::string str );
-void        handleInt( std::string str );
-void        handleFloat( std::string str );
-void        handleDouble( std::string str );
+void        handleChar( char c );
+void        handleInt( int i );
+void        handleFloat( float f );
+void        handleDouble( double d );
 void        printChar( char c );
 // void        printTypes( char c, int i, float f, double d );
 
