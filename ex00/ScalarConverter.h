@@ -39,18 +39,20 @@ class ScalarConverter
     ScalarConverter() = default;
 };
 
-// Check if the inputted literal is of the specified type
+// Check if the inputted literal is of a certain type
 
 bool isChar( std::string_view str );
 bool isDouble( std::string_view str, double d, std::size_t unconvertedPos );
 bool isFloat( std::string_view str, float f, std::size_t unconvertedPos );
 
-// Helper functions
+// Handle types (convert, check for limits, and print)
+
 void handleChar( char c );
 void handleInt( int i );
 void handleFloat( float f );
 void handleDouble( double d );
-void printChar( char c );
-// void        printTypes( char c, int i, float f, double d );
+
+// Whitespace helper
+void trimWhitespace( std::string& str, const std::string& whitespace = " \t\n\r\f\v" );
 
 #endif /* SCALARCONVERTER_H */
