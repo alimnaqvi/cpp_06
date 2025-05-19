@@ -28,44 +28,47 @@ void ScalarConverter::convert( std::string str )
 
     if ( str.empty() )
     {
-        std::cout << "Invalid input. " << USAGE_MSG << '\n';
+        std::cout << "The input must not be an empty string." << '\n';
         return;
     }
 
-    const auto strLen{ str.length() };
-
-    // It is char if length is 1 and it is not a digit
-    if ( strLen == 1 && !std::isdigit( str[0] ) )
-        return handleChar( str[0] );
+    if ( isChar( str ) )
+        return handleChar( str[1] );
 
     try
     {
         std::size_t unconvertedPos;
 
         double d{ std::stod( str, &unconvertedPos ) };
-        // It is double if '.'/nan/inf is present and stod succeeds without any leftover string
-        if ( ( str.find( '.' ) != std::string::npos || std::isnan( d ) || std::isinf( d ) ) &&
-             unconvertedPos == strLen )
+        if ( isDouble( str, d, unconvertedPos ) )
             return handleDouble( d );
 
         float f{ std::stof( str, &unconvertedPos ) };
-        // It is float if '.'/nan/inf is present and stof succeeds with only 'f' or 'F' as leftover
-        if ( ( str.find( '.' ) != std::string::npos || std::isnan( f ) || std::isinf( f ) ) &&
-             unconvertedPos + 1 == strLen && ( str[unconvertedPos] == 'f' || str[unconvertedPos] == 'F' ) )
+        if ( isFloat( str, f, unconvertedPos ) )
             return handleFloat( f );
 
         int i{ std::stoi( str, &unconvertedPos ) };
-        // It is int if stoi succeeds without any leftover string
-        if ( unconvertedPos == strLen )
+        if ( unconvertedPos == str.length() )
             return handleInt( i );
+    }
+    catch ( const std::out_of_range& e )
+    {
+        std::cout << "Invalid input. " << OVERFLOW_MSG << '\n';
+        return;
+    }
+    catch ( const std::invalid_argument& e )
+    {
+        std::cout << "The input string does match the most common literal form of any of the 4 scalar types. "
+                  << USAGE_MSG << '\n';
+        return;
     }
     catch ( const std::exception& e )
     {
-        // std::cout << "1 reached!" << '\n';
-        std::cout << "Invalid input." << '\n';
+        std::cout << "Invalid input. " << USAGE_MSG << '\n';
+        return;
     }
 
-    std::cout << USAGE_MSG << '\n';
+    std::cout << "Invalid input. " << USAGE_MSG << '\n';
 }
 
 // Helper functions
@@ -80,7 +83,7 @@ void printChar( char c )
 
 void handleChar( char c )
 {
-    printChar(c);
+    printChar( c );
 
     int i{ static_cast<int>( c ) };
     std::cout << "int: " << i << '\n';
@@ -117,12 +120,7 @@ void handleInt( int i )
 
 void handleFloat( float f )
 {
-    // std::cout << "2 reached!" << '\n';
-    std::cout << std::fixed << std::setprecision( 1 );
-    std::cout << "float: " << f << 'f' << '\n';
-
     double d{ static_cast<double>( f ) };
-    std::cout << "double: " << d << '\n';
 
     if ( std::isinf( f ) || std::isnan( f ) )
     {
@@ -147,21 +145,16 @@ void handleFloat( float f )
             std::cout << "int: " << i << '\n';
         }
     }
+
+    std::cout << std::fixed << std::setprecision( 1 );
+    std::cout << "float: " << f << 'f' << '\n';
+
+    std::cout << "double: " << d << '\n';
 }
 
 void handleDouble( double d )
 {
-    std::cout << std::fixed << std::setprecision( 1 );
-    std::cout << "double: " << d << '\n';
-
-    if ( std::isfinite( d ) && ( d > std::numeric_limits<float>::max() || d < std::numeric_limits<float>::lowest() ) )
-        std::cout << "float: impossible (will overflow/underflow)" << '\n';
-    else
-    {
-        float f{ static_cast<float>( d ) };
-        std::cout << "float: " << f << 'f' << '\n';
-    }
-
+    // std::cout << "3 reached!" << '\n';
     if ( std::isinf( d ) || std::isnan( d ) )
     {
         std::cout << "char: impossible" << '\n';
@@ -184,5 +177,16 @@ void handleDouble( double d )
             int i{ static_cast<int>( d ) };
             std::cout << "int: " << i << '\n';
         }
+    }
+
+    std::cout << std::fixed << std::setprecision( 1 );
+    std::cout << "double: " << d << '\n';
+
+    if ( std::isfinite( d ) && ( d > std::numeric_limits<float>::max() || d < std::numeric_limits<float>::lowest() ) )
+        std::cout << "float: impossible (will overflow/underflow)" << '\n';
+    else
+    {
+        float f{ static_cast<float>( d ) };
+        std::cout << "float: " << f << 'f' << '\n';
     }
 }

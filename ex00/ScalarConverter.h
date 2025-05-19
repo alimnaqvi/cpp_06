@@ -10,12 +10,18 @@
 #include <string>
 
 #define USAGE_MSG                                                                                                      \
-    "Ensure that the inputted string is one literal value (multiple values separated by whitespaces are not valid) of one of these types:\n\
+    "Ensure that the input string is one literal value (multiple values separated by whitespaces are not valid) of one of these types:\n\
 - char (e.g., 'a'): An ASCII character.\n\
-- int (e.g., '42'): A signed integer that fits in the implementation-defined limits of largest and smallest integer.\n\
-- float (e.g., '42.0f'): A decimal number (must contain a '.' and must respect implementation-defined limits of float type) followed by 'f' or 'F'. In addition, '-inff', '+inff', and 'nanf' are also valid.\n\
-- double (e.g., '42.0'): A decimal number (must contain a '.' and must respect implementation-defined limits of double type). In addition, '-inf', '+inf', and 'nan' are also valid.\n\
-Note that any leading and trailing whitespaces will be stripped from inputted literal."
+- int (e.g., 42): A signed integer that fits in the implementation-defined limits of largest and smallest integer.\n\
+- float (e.g., 42.0f): A decimal number (must contain a '.' and must respect implementation-defined limits of float type) followed by 'f' or 'F'. In addition, '-inff', '+inff', and 'nanf' are also valid.\n\
+- double (e.g., 42.0): A decimal number (must contain a '.' and must respect implementation-defined limits of double type). In addition, '-inf', '+inf', and 'nan' are also valid.\n\
+Note that any leading and trailing whitespaces will be stripped from inputted string."
+
+#define OVERFLOW_MSG                                                                                                   \
+    "The provided literal will overflow or underflow if converted to its implied type, so no conversions are "         \
+    "possible. The input must respect implementation-defined limits of the implied type. E.g., '2147483699' is "       \
+    "likely an invalid input because it overflows the integer type, but '2147483699.0' is likely valid because it "    \
+    "fits in its implied type double."
 
 class ScalarConverter
 {
@@ -33,12 +39,18 @@ class ScalarConverter
     ScalarConverter() = default;
 };
 
+// Check if the inputted literal is of the specified type
+
+bool isChar( std::string_view str );
+bool isDouble( std::string_view str, double d, std::size_t unconvertedPos );
+bool isFloat( std::string_view str, float f, std::size_t unconvertedPos );
+
 // Helper functions
-void        handleChar( char c );
-void        handleInt( int i );
-void        handleFloat( float f );
-void        handleDouble( double d );
-void        printChar( char c );
+void handleChar( char c );
+void handleInt( int i );
+void handleFloat( float f );
+void handleDouble( double d );
+void printChar( char c );
 // void        printTypes( char c, int i, float f, double d );
 
 #endif /* SCALARCONVERTER_H */
