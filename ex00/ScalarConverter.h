@@ -1,9 +1,13 @@
 #ifndef SCALARCONVERTER_H
 #define SCALARCONVERTER_H
 
+#include <cctype> // std::isprint
+#include <cmath>  // std::isnan, std::isinf
+#include <exception>
+#include <iomanip> // std::fixed, std::setprecision
 #include <iostream>
+#include <limits>
 #include <string>
-#include <sstream>
 
 #define USAGE_MSG                                                                                                      \
     "Ensure that the inputted string is one literal value (multiple values separated by whitespaces are not valid) of one of these types:\n\
@@ -44,5 +48,7 @@ void        handleChar( std::string str );
 void        handleInt( std::string str );
 void        handleFloat( std::string str );
 void        handleDouble( std::string str );
+void        printChar( char c );
+// void        printTypes( char c, int i, float f, double d );
 
 #endif /* SCALARCONVERTER_H */
