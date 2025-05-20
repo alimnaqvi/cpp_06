@@ -2,7 +2,7 @@ NAME = convert
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -MMD -MP
 
-SRCS = main.cpp ScalarConverter.cpp isType.cpp castPrint.cpp
+SRCS = main.cpp ScalarConverter.cpp isType.cpp
 OBJ_DIR = temp_files
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)

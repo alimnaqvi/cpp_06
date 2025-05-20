@@ -55,6 +55,68 @@ void ScalarConverter::convert( std::string str )
     std::cout << "Invalid input. " << USAGE_MSG << '\n';
 }
 
+/* Type handlers (entry points) */
+
+void handleChar( char c )
+{
+    castPrintChar( c );
+
+    castPrintInt( c );
+
+    castPrintFloat( c );
+
+    castPrintDouble( c );
+}
+
+void handleInt( int i )
+{
+    castPrintChar( i );
+
+    castPrintInt( i );
+
+    castPrintFloat( i );
+
+    castPrintDouble( i );
+}
+
+void handleFloat( float f )
+{
+    double d{ static_cast<double>( f ) };
+
+    if ( std::isinf( f ) || std::isnan( f ) )
+    {
+        std::cout << "char: impossible" << '\n';
+        std::cout << "int: impossible" << '\n';
+    }
+    else
+    {
+        castPrintChar( d );
+        castPrintInt( d );
+    }
+
+    castPrintFloat( f );
+
+    castPrintDouble( d );
+}
+
+void handleDouble( double d )
+{
+    if ( std::isinf( d ) || std::isnan( d ) )
+    {
+        std::cout << "char: impossible" << '\n';
+        std::cout << "int: impossible" << '\n';
+    }
+    else
+    {
+        castPrintChar( d );
+        castPrintInt( d );
+    }
+
+    castPrintFloat( d );
+
+    castPrintDouble( d );
+}
+
 // Whitespace helper
 void trimWhitespace( std::string& str, const std::string& whitespace )
 {
