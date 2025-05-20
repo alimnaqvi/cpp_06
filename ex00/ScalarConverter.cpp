@@ -17,8 +17,7 @@ void ScalarConverter::convert( std::string str )
     }
 
     if ( isChar( str ) )
-        return ((str.length() == 3) ? handleChar( str[1] ) : handleChar( str[0] )) ;
-        // return handleChar( str[1] );
+        return ( ( str.length() == 3 ) ? handleChar( str[1] ) : handleChar( str[0] ) );
 
     try
     {

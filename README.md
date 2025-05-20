@@ -10,4 +10,7 @@ Core concepts learned and applied:
   - std::stoi, std::stod, std::stof, etc.
   - Function templates for cleaner and maintainable code
 - Exercise 01: Serialization
+  - reinterpret_cast
+- Exercise 02: Identify real type
+  - dynamic_cast (downcasting)
   - 
