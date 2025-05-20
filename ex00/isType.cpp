@@ -4,7 +4,7 @@
 // It is char if length is 1 or 3 (surrounded by single quotes) and is not a digit
 bool isChar( std::string_view str )
 {
-    if ( str.length() == 3 && str[0] == '\'' && str[2] == '\'' && !std::isdigit( str[1] ) )
+    if ( str.length() == 3 && str[0] == '\'' && str[2] == '\'' )
         return true;
 
     if ( str.length() == 1 && !std::isdigit( str[0] ) )

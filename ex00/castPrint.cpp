@@ -85,7 +85,7 @@ void handleChar( char c )
 void handleInt( int i )
 {
     castPrintChar( i );
-    
+
     castPrintInt( i );
 
     castPrintFloat( i );
