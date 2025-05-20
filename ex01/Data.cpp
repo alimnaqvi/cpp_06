@@ -7,12 +7,12 @@ std::ostream& operator<<( std::ostream& out, Data data )
     return out;
 }
 
-std::ostream& operator<<( std::ostream& out, Data* dataPtr )
-{
-    if ( dataPtr )
-        out << "id: " << dataPtr->id << ", name: " << dataPtr->name << '.';
-    else
-        out << "Cannot dereference nullptr" << '.';
+// std::ostream& operator<<( std::ostream& out, Data* dataPtr )
+// {
+//     if ( dataPtr )
+//         out << "id: " << dataPtr->id << ", name: " << dataPtr->name << '.';
+//     else
+//         out << "Cannot dereference nullptr" << '.';
 
-    return out;
-}
+//     return out;
+// }

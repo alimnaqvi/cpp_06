@@ -11,6 +11,6 @@ struct Data
 };
 
 std::ostream& operator<<( std::ostream& out, Data data );
-std::ostream& operator<<( std::ostream& out, Data* dataPtr );
+// std::ostream& operator<<( std::ostream& out, Data* dataPtr );
 
 #endif /* DATA_H */
