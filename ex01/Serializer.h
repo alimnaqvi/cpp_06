@@ -4,7 +4,7 @@
 #include "Data.h"
 #include <cstdint>
 
-class Data;
+struct Data;
 
 class Serializer
 {
