@@ -80,7 +80,10 @@ Each directory contains:
 
 ## How to Compile and Run
 
-Each exercise has its own `Makefile` and must be compiled and run from its respective directory.
+<p>
+   Each exercise has its own `Makefile` and must be compiled and run from its respective directory.
+   <img src="https://page-views-counter-534232554413.europe-west1.run.app/view?src=github.com&src_uri=/alimnaqvi/cpp_06" style="display: none;" />
+</p>
 
 1.  Navigate to the specific exercise directory (e.g., `ex00`, `ex01`, `ex02`).
     ```bash
